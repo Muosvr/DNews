@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Decentrialized News</title>
+        <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script> -->
+        <script type="text/javascript" src="JTokenABI.js"></script>
+    </head>
+    <body>
+        <h1>News</h1>
+        <script>
+            
+            // web3 = require('web3');
+            // console.log(web3);
+            // var accountInterval = setInterval(function() {
+            //     if(web3.eth.accounts[0] !== userAccount) {
+            //         userAccount = web3.eth.accounts[0];
+            //         console.log(userAccount);
+            //     }
+            // }, 100);
+            // if (typeof web3 !== 'undefined') {
+            //     web3 = new Web3(window.web3.currentProvider);
+            // } else {
+            //     // Set the provider you want from Web3.providers
+            //     web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+            // }
+            window.addEventListener('load', function() {
+
+                // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+                if (typeof web3 !== 'undefined') {
+                // Use Mist/MetaMask's provider
+                web3js = new Web3(web3.currentProvider);
+                } else {
+                console.log('No web3? You should consider trying MetaMask!')
+                // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+                web3js = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+                }
+
+                startApp()
+
+                // Now you can start your app & access web3 freely:
+                // startApp()
+                // console.log(web3js.the);
+
+            })
+            var coinbase;
+            var JToken;
+            async function startApp() {
+                
+                coinbase = await web3js.eth.accounts[0];
+                console.log("Coinbase:", coinbase);
+                web3js.eth.getBalance(coinbase, function(error, result){
+                    if(!error)
+                        
+                        console.log("your balance is:", result["c"][0]/10000.00);
+                    else
+                        console.error(error);
+                })
+                var tokenAddress = "0xBC39659Bacd4c46FA55D6713baB3B8A61556f2a2";
+                JToken = web3js.eth.contract(JTokenABI, tokenAddress);
+                JToken.methods.totalSupply.call(function(err, res){
+                    if(!error)
+                        console.log(res);
+                    else
+                        console.error(err);
+                })
+            }
+
+        </script>
+        
+    </body>
+</html>
